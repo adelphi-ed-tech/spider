@@ -1,0 +1,4 @@
+/* application specific styles here */
+.container-fluid {
+  max-width: 1400px;
+}
