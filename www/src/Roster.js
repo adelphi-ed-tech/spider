@@ -9,12 +9,13 @@ function ListRosters(props) {
 
 const blankRoster = {
   id: null,
-  rosterName: "",
+  roster: "",
   participants: ""
 }
 
 function RosterForm(props) {
   const [roster, setRoster] = useState(blankRoster);
+  const [db, setDB] = useState({});
 
 
   const handleChange = (e)=> {
@@ -24,37 +25,48 @@ function RosterForm(props) {
   }
 
 
-  let db = null;
-  const loadDatabase = ()=> {
-    db = DataBase("rosters")
+  const save = ()=> {
+    db.save(roster);
   }
-  useEffect(loadDatabase);
 
+  const loadDatabase = ()=> {
+    setDB(DataBase("rosters"));
+  }
+  useEffect(loadDatabase, [false]);
+
+
+  if (db === null) {
+    return <p>Loading...</p>
+  }
 
 
   return (
-    <form className="RosterForm">
-      <div className="Roster input-group mb-3">
-        <div className="mb-3">
-          <label for="roster" className="form-label">Name of Roster</label>
-          <input id="roster"
-                 type="text"
-                 className="form-control"
-                 value={roster.rosterName}
-                 onChange={handleChange} />
-        </div>
-        <div className="mb-3">
-          <label for="roster" className="form-label">Roster</label>
-          <textarea id="participants"
-                    className="form-control"
-                    placeholder="type or paster names here"
-                    onChange={handleChange}>{roster.rosterName}</textarea>
-        </div>
-        <div className="mb-3">
-          <button className="btn btn-primary" onClick={db.save} />
-        </div>
-      </div>
-    </form>
+    <div className="Roster">
+      <h1>Roster Form</h1>
+      <form className="RosterForm">
+          <div className="mb-3">
+            <label htmlFor="roster" className="form-label">Name of Roster</label>
+            <input id="roster"
+                   type="text"
+                   className="form-control"
+                   value={roster.rosterName}
+                   onChange={handleChange} />
+          </div>
+
+          <div className="mb-3">
+            <label htmlFor="roster" className="form-label">Roster</label>
+            <textarea id="participants"
+                      className="form-control"
+                      rows="10"
+                      placeholder="type or paster names here"
+                      onChange={handleChange}>{roster.rosterName}</textarea>
+          </div>
+
+          <div className="mb-3">
+            <button className="btn btn-primary" type="button" onClick={db.save}>Save</button>
+          </div>
+      </form>
+    </div>
   )
 }
 

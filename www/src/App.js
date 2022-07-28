@@ -3,6 +3,7 @@ import * as _ from 'lodash';
 import { DateTime } from 'luxon';
 import { BrowserRouter as Router, Route, Routes, Link, NavLink } from "react-router-dom";
 
+import {RosterForm} from "./Roster"
 import Map from "./res/map.png";
 
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -17,6 +18,7 @@ function App() {
             <Route exact path="/" element={<Home />} />
             <Route exact path="/contact" element={<Contact />} />
             <Route exact path="/about" element={<About />} />
+            <Route exact path="/roster" element={<RosterForm />} />
           </Routes>
         </div>
       </Router>
@@ -33,7 +35,7 @@ function Home() {
       <p>
         The current time is <code>{now.toLocaleString(DateTime.DATETIME_MED)}</code>
       </p>
-
+      <Link className="" to="/roster">New Roster</Link>
     </div>
   )
 }
@@ -75,7 +77,7 @@ function About() {
   )
 }
 
-function Contact() {
+function Contact(props) {
 
   return (
     <div className="Contact">
@@ -85,8 +87,6 @@ function Contact() {
         75 Varick Street, New York, NY 10013
       </p>
       <img src={Map} alt="map of Manhattan, corner of Canal Street and Varick Street" />
-
-
     </div>
   )
 }
@@ -110,10 +110,10 @@ function TopNav (props) {
         <div id="TopMenu" className="collapse navbar-collapse m-0 p-0">
           <ul className="TopNav navbar-nav m-0 p-0">
             <li className="nav-item mb-0 pb-0">
-              <NavLink activeClassName="active bg-white disabled" className="nav-link btn btn-link font-weight-bold" to="/contact">Contact</NavLink>
+              <NavLink className="nav-link btn btn-link font-weight-bold" to="/contact">Contact</NavLink>
             </li>
             <li className="nav-item mb-0 pb-0">
-              <NavLink activeClassName="active bg-white disabled" className="nav-link btn btn-link font-weight-bold" to="/about">About</NavLink>
+              <NavLink className="nav-link btn btn-link font-weight-bold" to="/about">About</NavLink>
             </li>
           </ul>
         </div>
