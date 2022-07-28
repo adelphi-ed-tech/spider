@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import * as _ from 'lodash';
 import { DateTime } from 'luxon';
 import { BrowserRouter as Router, Route, Routes, Link, NavLink } from "react-router-dom";
+import { MapperForm } from './Mapper';
+
 
 import {RosterList, RosterForm} from "./Roster"
 import Map from "./res/map.png";
@@ -18,7 +20,8 @@ function App() {
             <Route exact path="/" element={<Home />} />
             <Route exact path="/contact" element={<Contact />} />
             <Route exact path="/about" element={<About />} />
-            <Route path="/roster" element={<RosterForm />} />
+            <Route exact path="/roster" element={<RosterForm />} />
+            <Route exact path="/mapper" element={<MapperForm />} />
           </Routes>
         </div>
       </Router>
@@ -48,6 +51,7 @@ function Home() {
           <div className="card">
             <div className="card-body">
               <h4 className="card-title">Conversations</h4>
+              <Link className="" to="/mapper">New Discussion</Link>
             </div>
           </div>
         </div>
