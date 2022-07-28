@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import * as _ from 'lodash';
 import { DateTime } from 'luxon';
 import { BrowserRouter as Router, Route, Routes, Link, NavLink } from "react-router-dom";
+import { MapperForm } from './Mapper';
+
 
 import {RosterForm} from "./Roster"
 import Map from "./res/map.png";
@@ -19,6 +21,7 @@ function App() {
             <Route exact path="/contact" element={<Contact />} />
             <Route exact path="/about" element={<About />} />
             <Route exact path="/roster" element={<RosterForm />} />
+            <Route exact path="/mapper" element={<MapperForm />} />
           </Routes>
         </div>
       </Router>
@@ -36,6 +39,7 @@ function Home() {
         The current time is <code>{now.toLocaleString(DateTime.DATETIME_MED)}</code>
       </p>
       <Link className="" to="/roster">New Roster</Link>
+      <Link className="" to="/mapper">New Discussion</Link>
     </div>
   )
 }
