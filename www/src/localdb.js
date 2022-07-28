@@ -17,7 +17,7 @@ function DataBase(name) {
 
   let commit = () => {
     console.log("saving", JSON.stringify(db))
-    // localStorage.setItem(name, JSON.stringify(db));
+    localStorage.setItem(name, JSON.stringify(db));
   }
 
   let store = (item)=> {
@@ -40,7 +40,7 @@ function DataBase(name) {
     commit();
   }
 
-  let findAll = ()=>db.data;
+  let findAll = ()=>_.values(db.data);
   let get = (id)=>db.data[id];
   let remove = (item)=> {
     let id = item.id || item;

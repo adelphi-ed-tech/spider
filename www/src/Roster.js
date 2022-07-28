@@ -1,21 +1,52 @@
 import React, { useState, useEffect } from 'react';
 import { DateTime } from 'luxon';
 import * as _ from 'lodash';
+import { Link } from "react-router-dom";
+
+
+
 import DataBase from "./localdb"
 
-function ListRosters(props) {
+function RosterList(props) {
+
+  const db = DataBase("rosters");
+  const rosters = db.findAll()
+  const Row = (roster)=>{
+    return (
+      <li key={roster.id}><Link to={`/roster/${roster.id}`}>{roster.roster}</Link></li>
+    )
+  }
+
+  const items = _.map(rosters, Row)
+  return (
+    <ul className="RosterList list-unstyled">
+      {items}
+    </ul>
+  )
 
 }
 
-const blankRoster = {
-  id: null,
-  roster: "",
-  participants: ""
+function Roster()  {
+  return {
+    id: null,
+    roster: "",
+    participants: ""
+  }
 }
 
 function RosterForm(props) {
-  const [roster, setRoster] = useState(blankRoster);
+  const [roster, setRoster] = useState(Roster());
   const [db, setDB] = useState({});
+
+
+  const loadDatabase = ()=> {
+    setDB(DataBase("rosters"));
+    const urlId = props.match.params.id;
+    console.log(urlId);
+    
+  }
+  useEffect(loadDatabase, [false]);
+
 
 
   const handleChange = (e)=> {
@@ -25,15 +56,10 @@ function RosterForm(props) {
   }
 
 
-  const save = ()=> {
+  const handleSubmit = (e)=> {
+    e.preventDefault();
     db.save(roster);
   }
-
-  const loadDatabase = ()=> {
-    setDB(DataBase("rosters"));
-  }
-  useEffect(loadDatabase, [false]);
-
 
   if (db === null) {
     return <p>Loading...</p>
@@ -43,7 +69,7 @@ function RosterForm(props) {
   return (
     <div className="Roster">
       <h1>Roster Form</h1>
-      <form className="RosterForm">
+      <form className="RosterForm" onSubmit={handleSubmit}>
           <div className="mb-3">
             <label htmlFor="roster" className="form-label">Name of Roster</label>
             <input id="roster"
@@ -63,11 +89,11 @@ function RosterForm(props) {
           </div>
 
           <div className="mb-3">
-            <button className="btn btn-primary" type="button" onClick={db.save}>Save</button>
+            <button className="btn btn-primary" type="button" onClick={handleSubmit}>Save</button>
           </div>
       </form>
     </div>
   )
 }
 
-export {ListRosters, RosterForm};
+export {RosterList, RosterForm};

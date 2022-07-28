@@ -3,7 +3,7 @@ import * as _ from 'lodash';
 import { DateTime } from 'luxon';
 import { BrowserRouter as Router, Route, Routes, Link, NavLink } from "react-router-dom";
 
-import {RosterForm} from "./Roster"
+import {RosterList, RosterForm} from "./Roster"
 import Map from "./res/map.png";
 
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -18,7 +18,7 @@ function App() {
             <Route exact path="/" element={<Home />} />
             <Route exact path="/contact" element={<Contact />} />
             <Route exact path="/about" element={<About />} />
-            <Route exact path="/roster" element={<RosterForm />} />
+            <Route path="/roster" element={<RosterForm />} />
           </Routes>
         </div>
       </Router>
@@ -32,10 +32,27 @@ function Home() {
   return (
     <div className="Home">
       <h1>Welcome to Spider Conversations</h1>
-      <p>
-        The current time is <code>{now.toLocaleString(DateTime.DATETIME_MED)}</code>
-      </p>
-      <Link className="" to="/roster">New Roster</Link>
+
+      <div className="row">
+        <div className="col">
+          <div className="card">
+            <div className="card-body">
+              <h4 className="card-title">Roster List</h4>
+              <RosterList />
+              <Link className="btn btn-primary" to="/roster">New Roster</Link>
+            </div>
+          </div>
+        </div>
+
+        <div className="col">
+          <div className="card">
+            <div className="card-body">
+              <h4 className="card-title">Conversations</h4>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
   )
 }
