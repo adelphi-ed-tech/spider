@@ -21,6 +21,7 @@ function App() {
             <Route exact path="/contact" element={<Contact />} />
             <Route exact path="/about" element={<About />} />
             <Route exact path="/roster" element={<RosterForm />} />
+            <Route exact path="/roster/:id" element={<RosterForm />} />
             <Route exact path="/mapper" element={<MapperForm />} />
           </Routes>
         </div>

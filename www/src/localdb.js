@@ -52,6 +52,7 @@ function DataBase(name) {
     name: name,
     save: save,
     remove: remove,
+    get: get,
     findAll: findAll
   }
   return obj;

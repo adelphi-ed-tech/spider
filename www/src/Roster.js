@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { DateTime } from 'luxon';
 import * as _ from 'lodash';
-import { Link } from "react-router-dom";
-
-
+import { Link, useParams } from "react-router-dom";
 
 import DataBase from "./localdb"
 
@@ -29,30 +27,38 @@ function RosterList(props) {
 function Roster()  {
   return {
     id: null,
-    roster: "",
+    roster: "new roster",
     participants: ""
   }
 }
 
 function RosterForm(props) {
   const [roster, setRoster] = useState(Roster());
-  const [db, setDB] = useState({});
+  const [db, setDB] = useState(null);
+  let { id } = useParams();
 
 
-  const loadDatabase = ()=> {
-    setDB(DataBase("rosters"));
-    const urlId = props.match.params.id;
-    console.log(urlId);
-    
+  const loadRoster = ()=> {
+    if (id && db) {
+      console.log("loading roster:", id);
+      let x = db.get(id);
+      console.log("loaded", x);
+      setRoster(x);
+    }
   }
-  useEffect(loadDatabase, [false]);
+  const loadDB = ()=>{setDB(DataBase("rosters"))}
+  useEffect(loadDB, [false]);
+  useEffect(loadRoster, [db]);
 
 
 
   const handleChange = (e)=> {
     let key = e.target.name || e.target.id;
-    roster[key] = e.target.value;
-    setRoster(roster)
+    let val = e.target.value;
+    console.log(roster);
+    roster[key] = val;
+    console.log(roster);
+    setRoster(roster);
   }
 
 
@@ -65,27 +71,30 @@ function RosterForm(props) {
     return <p>Loading...</p>
   }
 
+  console.log(roster["roster"]);
 
   return (
     <div className="Roster">
       <h1>Roster Form</h1>
+      {JSON.stringify(roster)}
       <form className="RosterForm" onSubmit={handleSubmit}>
           <div className="mb-3">
             <label htmlFor="roster" className="form-label">Name of Roster</label>
             <input id="roster"
                    type="text"
                    className="form-control"
-                   value={roster.rosterName}
+                   value={roster.roster}
                    onChange={handleChange} />
           </div>
 
           <div className="mb-3">
-            <label htmlFor="roster" className="form-label">Roster</label>
+            <label htmlFor="participants" className="form-label">Roster</label>
             <textarea id="participants"
+                      value={roster.participants}
                       className="form-control"
                       rows="10"
                       placeholder="type or paster names here"
-                      onChange={handleChange}>{roster.rosterName}</textarea>
+                      onChange={handleChange} />
           </div>
 
           <div className="mb-3">
