@@ -1,61 +1,108 @@
 import React, { useState, useEffect } from 'react';
 import { DateTime } from 'luxon';
 import * as _ from 'lodash';
+import { Link, useParams } from "react-router-dom";
+
 import DataBase from "./localdb"
 
-function ListRosters(props) {
+function RosterList(props) {
+
+  const db = DataBase("rosters");
+  const rosters = db.findAll()
+  const Row = (roster)=>{
+    return (
+      <li key={roster.id}><Link to={`/roster/${roster.id}`}>{roster.roster}</Link></li>
+    )
+  }
+
+  const items = _.map(rosters, Row)
+  return (
+    <ul className="RosterList list-unstyled">
+      {items}
+    </ul>
+  )
 
 }
 
-const blankRoster = {
-  id: null,
-  rosterName: "",
-  participants: ""
+function Roster()  {
+  return {
+    id: null,
+    roster: "new roster",
+    participants: ""
+  }
 }
 
 function RosterForm(props) {
-  const [roster, setRoster] = useState(blankRoster);
+  const [roster, setRoster] = useState(Roster());
+  const [db, setDB] = useState(null);
+  let { id } = useParams();
+
+
+  const loadRoster = ()=> {
+    if (id && db) {
+      console.log("loading roster:", id);
+      let x = db.get(id);
+      console.log("loaded", x);
+      setRoster(x);
+    }
+  }
+  const loadDB = ()=>{setDB(DataBase("rosters"))}
+  useEffect(loadDB, [false]);
+  useEffect(loadRoster, [db]);
+
 
 
   const handleChange = (e)=> {
     let key = e.target.name || e.target.id;
-    roster[key] = e.target.value;
-    setRoster(roster)
+    let val = e.target.value;
+    console.log(roster);
+    roster[key] = val;
+    console.log(roster);
+    setRoster(roster);
   }
 
 
-  let db = null;
-  const loadDatabase = ()=> {
-    db = DataBase("rosters")
+  const handleSubmit = (e)=> {
+    e.preventDefault();
+    db.save(roster);
   }
-  useEffect(loadDatabase);
 
+  if (db === null) {
+    return <p>Loading...</p>
+  }
 
+  console.log(roster["roster"]);
 
   return (
-    <form className="RosterForm">
-      <div className="Roster input-group mb-3">
-        <div className="mb-3">
-          <label for="roster" className="form-label">Name of Roster</label>
-          <input id="roster"
-                 type="text"
-                 className="form-control"
-                 value={roster.rosterName}
-                 onChange={handleChange} />
-        </div>
-        <div className="mb-3">
-          <label for="roster" className="form-label">Roster</label>
-          <textarea id="participants"
-                    className="form-control"
-                    placeholder="type or paster names here"
-                    onChange={handleChange}>{roster.rosterName}</textarea>
-        </div>
-        <div className="mb-3">
-          <button className="btn btn-primary" onClick={db.save} />
-        </div>
-      </div>
-    </form>
+    <div className="Roster">
+      <h1>Roster Form</h1>
+      {JSON.stringify(roster)}
+      <form className="RosterForm" onSubmit={handleSubmit}>
+          <div className="mb-3">
+            <label htmlFor="roster" className="form-label">Name of Roster</label>
+            <input id="roster"
+                   type="text"
+                   className="form-control"
+                   value={roster.roster}
+                   onChange={handleChange} />
+          </div>
+
+          <div className="mb-3">
+            <label htmlFor="participants" className="form-label">Roster</label>
+            <textarea id="participants"
+                      value={roster.participants}
+                      className="form-control"
+                      rows="10"
+                      placeholder="type or paster names here"
+                      onChange={handleChange} />
+          </div>
+
+          <div className="mb-3">
+            <button className="btn btn-primary" type="button" onClick={handleSubmit}>Save</button>
+          </div>
+      </form>
+    </div>
   )
 }
 
-export {ListRosters, RosterForm};
+export {RosterList, RosterForm};

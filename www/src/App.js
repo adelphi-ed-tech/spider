@@ -2,7 +2,10 @@ import React, { useState, useEffect } from 'react';
 import * as _ from 'lodash';
 import { DateTime } from 'luxon';
 import { BrowserRouter as Router, Route, Routes, Link, NavLink } from "react-router-dom";
+import { MapperForm } from './Mapper';
 
+
+import {RosterList, RosterForm} from "./Roster"
 import Map from "./res/map.png";
 
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -17,6 +20,9 @@ function App() {
             <Route exact path="/" element={<Home />} />
             <Route exact path="/contact" element={<Contact />} />
             <Route exact path="/about" element={<About />} />
+            <Route exact path="/roster" element={<RosterForm />} />
+            <Route exact path="/roster/:id" element={<RosterForm />} />
+            <Route exact path="/mapper" element={<MapperForm />} />
           </Routes>
         </div>
       </Router>
@@ -30,9 +36,27 @@ function Home() {
   return (
     <div className="Home">
       <h1>Welcome to Spider Conversations</h1>
-      <p>
-        The current time is <code>{now.toLocaleString(DateTime.DATETIME_MED)}</code>
-      </p>
+
+      <div className="row">
+        <div className="col">
+          <div className="card">
+            <div className="card-body">
+              <h4 className="card-title">Roster List</h4>
+              <RosterList />
+              <Link className="btn btn-primary" to="/roster">New Roster</Link>
+            </div>
+          </div>
+        </div>
+
+        <div className="col">
+          <div className="card">
+            <div className="card-body">
+              <h4 className="card-title">Conversations</h4>
+              <Link className="" to="/mapper">New Discussion</Link>
+            </div>
+          </div>
+        </div>
+      </div>
 
     </div>
   )
@@ -75,7 +99,7 @@ function About() {
   )
 }
 
-function Contact() {
+function Contact(props) {
 
   return (
     <div className="Contact">
@@ -85,8 +109,6 @@ function Contact() {
         75 Varick Street, New York, NY 10013
       </p>
       <img src={Map} alt="map of Manhattan, corner of Canal Street and Varick Street" />
-
-
     </div>
   )
 }
@@ -110,10 +132,10 @@ function TopNav (props) {
         <div id="TopMenu" className="collapse navbar-collapse m-0 p-0">
           <ul className="TopNav navbar-nav m-0 p-0">
             <li className="nav-item mb-0 pb-0">
-              <NavLink activeClassName="active bg-white disabled" className="nav-link btn btn-link font-weight-bold" to="/contact">Contact</NavLink>
+              <NavLink className="nav-link btn btn-link font-weight-bold" to="/contact">Contact</NavLink>
             </li>
             <li className="nav-item mb-0 pb-0">
-              <NavLink activeClassName="active bg-white disabled" className="nav-link btn btn-link font-weight-bold" to="/about">About</NavLink>
+              <NavLink className="nav-link btn btn-link font-weight-bold" to="/about">About</NavLink>
             </li>
           </ul>
         </div>

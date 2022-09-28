@@ -2,15 +2,32 @@ import * as _ from 'lodash';
 import { DateTime } from 'luxon';
 
 function DataBase(name) {
-  let data = localStorage.getItem(name) || {};
-  data = JSON.parse(data);
+  let db = localStorage.getItem(name);
+  if (db) {
+    db = JSON.parse(db);
+  }
+  else {
+    db = {
+      dbName: name,
+      nextId: 1,
+      data: {}
+    }
+  }
+
+
+  let commit = () => {
+    console.log("saving", JSON.stringify(db))
+    localStorage.setItem(name, JSON.stringify(db));
+  }
+
   let store = (item)=> {
     if (!item.id) {
-      item.id = _.uuid();
+      item.id = db.nextId;
       item.created = DateTime.now();
+      db.nextId = db.nextId + 1;
     }
     item.modified = DateTime.now();
-    data[item.id] = item;
+    db.data[item.id] = item;
   }
 
   let save = (item)=> {
@@ -20,22 +37,25 @@ function DataBase(name) {
     else {
       store(item);
     }
-    localStorage.setItem(name, JSON.stringify(data))
-  }
-  let get = (id)=>data[id];
-  let delete = (item)=> {
-    let id = item.id || item;
-    data = _.omit(data, id);
-    localStorage.setItem(name, JSON.stringify(data))
+    commit();
   }
 
-  const db = {
-    name: name,
-    items: data,
-    save: save,
-    delete: delete
+  let findAll = ()=>_.values(db.data);
+  let get = (id)=>db.data[id];
+  let remove = (item)=> {
+    let id = item.id || item;
+    db.data = _.omit(db.data, id);
+    commit();
   }
-  return db;
+
+  const obj = {
+    name: name,
+    save: save,
+    remove: remove,
+    get: get,
+    findAll: findAll
+  }
+  return obj;
 }
 
 
