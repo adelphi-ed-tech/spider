@@ -35,7 +35,7 @@ function Home() {
 
   return (
     <div className="Home">
-      <h1>Welcome to Spider Conversations</h1>
+      <h1><center>Discussion Mapping Tool</center></h1>
 
       <div className="row">
         <div className="col">
@@ -43,6 +43,7 @@ function Home() {
             <div className="card-body">
               <h4 className="card-title">Roster List</h4>
               <RosterList />
+              <br />
               <Link className="btn btn-primary" to="/roster">New Roster</Link>
             </div>
           </div>
@@ -51,8 +52,9 @@ function Home() {
         <div className="col">
           <div className="card">
             <div className="card-body">
-              <h4 className="card-title">Conversations</h4>
-              <Link className="" to="/mapper">New Discussion</Link>
+              <h4 className="card-title">Discussions</h4>
+              <br />
+              <Link className="btn btn-primary" to="/mapper">New Discussion</Link>
             </div>
           </div>
         </div>

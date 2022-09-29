@@ -11,7 +11,7 @@
 
 // set the dimensions and margins of the graph
 var margin = {top: 20, right: 30, bottom: 20, left: 30},
-  width = 1920 - margin.left - margin.right,
+  width = 1020 - margin.left - margin.right,
   height = 1080 - margin.top - margin.bottom;
 
 // append the svg object to the body of the page
@@ -43,7 +43,7 @@ d3.json("./data.json", function( data) {
       .attr("cx", function(d){ return(x(d.name))})
       .attr("cy", height-30)
       .attr("r", 8)
-      .style("fill", "#69b3a2")
+      .style("fill", "#484848")
 
   // And give them a label
   var labels = svg
@@ -90,19 +90,20 @@ d3.json("./data.json", function( data) {
       .on('mouseover', function (d) {
         // Highlight the nodes: every node is green except of him
         nodes.style('fill', "#B8B8B8")
-        d3.select(this).style('fill', '#69b3b2')
+        d3.select(this).style('fill', '#484848')
         // Highlight the connections
         links
-          .style('stroke', function (link_d) { return link_d.source === d.id || link_d.target === d.id ? '#69b3b2' : '#b8b8b8';})
+          .style('stroke', function (link_d) { return link_d.source === d.id || link_d.target === d.id ? (d)=>d.color : '#b8b8b8';})
           .style('stroke-width', function (link_d) { return link_d.source === d.id || link_d.target === d.id ? 4 : 1;})
       })
       .on('mouseout', function (d) {
-        nodes.style('fill', "#69b3a2")
+        nodes.style('fill', "#484848")
         links
-          .style('stroke', 'black')
+          .style('stroke', (d)=>d.color)
           .style('stroke-width', '1')
       })
 })
+
 
 // text hover nodes
 svg
@@ -114,4 +115,12 @@ svg
     .attr("y", 10)
     .html("Hover nodes")
 
+    
+// creates legend 
+svg.append("circle").attr("cx",200).attr("cy", 30).attr("r", 6).style("fill", "red")
+svg.append("circle").attr("cx",200).attr("cy", 60).attr("r", 6).style("fill", "green")
+svg.append("circle").attr("cx",200).attr("cy", 90).attr("r", 6).style("fill", "purple")
+svg.append("text").attr("x", 220).attr("y", 30).text("Discussion Question").style("font-size", "15px").attr("alignment-baseline","middle")
+svg.append("text").attr("x", 220).attr("y", 60).text("Quote").style("font-size", "15px").attr("alignment-baseline","middle")
+svg.append("text").attr("x", 220).attr("y", 90).text("Talking Point").style("font-size", "15px").attr("alignment-baseline","middle")
 </script>
