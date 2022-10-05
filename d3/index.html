@@ -44,6 +44,7 @@ d3.json("./data.json", function( data) {
       .attr("cy", height-30)
       .attr("r", 8)
       .style("fill", "#484848")
+      
 
   // And give them a label
   var labels = svg
@@ -65,7 +66,8 @@ d3.json("./data.json", function( data) {
   });
   // Cool, now if I do idToNode["2"].name I've got the name of the node with id 2
 
-  const linkOffset = 40;
+  //THIS LINE OF CODE FOR THE OFFSETS IS WHAT IS CREATING THE PROBLEM!!!! 
+  const linkOffset = 10;
   // Add the links
   var links = svg
     .selectAll('mylinks')
@@ -81,20 +83,30 @@ d3.json("./data.json", function( data) {
         (start - end)/2, 0, 0, ',',
         start < end ? 1 : 0, end, ',', height-30 + linkOffset * d.link_count] // We always want the arc on top. So if end is before start, putting 0 here turn the arc upside down.
         .join(' ');
-    })
+
+       //TRYING TO ADD ANIMATION FOR THE LINES. THIS DOESN'T WORK FOR SOME OBVIOUS REASONS
+        update();
+
+function update() {
+      links.transition()
+      .ease(d3.easeLinear)
+      .duration(2000)
+    }
+    //END NON WORKING AREA
+  })
     .style("fill", "none")
     .attr("stroke", (d)=>d.color)
 
     // Add the highlighting functionality
     nodes
       .on('mouseover', function (d) {
-        // Highlight the nodes: every node is green except of him
+        // Highlight the nodes: all nodes gray out except the node connections of individual
         nodes.style('fill', "#B8B8B8")
         d3.select(this).style('fill', '#484848')
         // Highlight the connections
         links
           .style('stroke', function (link_d) { return link_d.source === d.id || link_d.target === d.id ? (d)=>d.color : '#b8b8b8';})
-          .style('stroke-width', function (link_d) { return link_d.source === d.id || link_d.target === d.id ? 4 : 1;})
+          .style('stroke-width', function (link_d) { return link_d.source === d.id || link_d.target === d.id ? 2 : 1;})
       })
       .on('mouseout', function (d) {
         nodes.style('fill', "#484848")
@@ -115,6 +127,7 @@ svg
     .attr("y", 10)
     .html("Hover nodes")
 
+    
     
 // creates legend 
 svg.append("circle").attr("cx",230).attr("cy", 650).attr("r", 6).style("fill", "red")
