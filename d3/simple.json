@@ -1,0 +1,61 @@
+{
+  "nodes": [
+    {
+      "id": 1,
+      "name": "Izzy"
+    },
+    {
+      "id": 2,
+      "name": "Lia"
+    },
+    {
+      "id": 3,
+      "name": "Noah"
+    },
+    {
+      "id": 4,
+      "name": "Bella"
+    },
+    {
+      "id": 5,
+      "name": "Andrew M"
+    },
+    {
+      "id": 6,
+      "name": "Julia"
+    },
+    {
+      "id": 7,
+      "name": "Gabby"
+    },
+    {
+      "id": 8,
+      "name": "Andrew S"
+    },
+    {
+      "id": 9,
+      "name": "Alexis"
+    }
+
+  ],
+  "links": [
+    {
+      "source": 2,
+      "target": 8,
+      "color": "red",
+      "link_count": 0
+    },
+    {
+      "source": 3,
+      "target": 7,
+      "color": "blue",
+      "link_count": 0
+    },
+    {
+      "source": 1,
+      "target": 9,
+      "color": "purple",
+      "link_count": 0
+    }
+  ]
+}

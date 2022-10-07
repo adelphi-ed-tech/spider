@@ -5,14 +5,15 @@
 <script src="https://d3js.org/d3.v4.js"></script>
 
 <!-- Create a div where the graph will take place -->
+
 <div id="my_dataviz"></div>
 
 <script>
 
 // set the dimensions and margins of the graph
-var margin = {top: 20, right: 30, bottom: 20, left: 30},
-  width = 1020 - margin.left - margin.right,
-  height = 1080 - margin.top - margin.bottom;
+const margin = {top: 20, right: 30, bottom: 120, left: 30};
+const width = 1920 - margin.left - margin.right;
+const height = 1080 - margin.top - margin.bottom;
 
 // append the svg object to the body of the page
 var svg = d3.select("#my_dataviz")
@@ -24,6 +25,8 @@ var svg = d3.select("#my_dataviz")
           "translate(" + margin.left + "," + margin.top + ")");
 
 // Read dummy data
+// d3.json("./offsets.json", function( data) {
+// d3.json("./simple.json", function( data) {
 d3.json("./data.json", function( data) {
 
   // List of node names
@@ -44,7 +47,7 @@ d3.json("./data.json", function( data) {
       .attr("cy", height-30)
       .attr("r", 8)
       .style("fill", "#484848")
-      
+
 
   // And give them a label
   var labels = svg
@@ -54,8 +57,9 @@ d3.json("./data.json", function( data) {
     .append("text")
       .attr("x", function(d){ return(x(d.name))})
       .attr("y", height-10)
+      .attr("transform", (d)=> `rotate(45, ${x(d.name)}, ${height-15})`)
       .text(function(d){ return(d.name)})
-      .style("text-anchor", "middle")
+      .style("text-anchor", "left")
 
   // Add links between nodes. Here is the tricky part.
   // In my input data, links are provided between nodes -id-, NOT between node names.
@@ -66,8 +70,8 @@ d3.json("./data.json", function( data) {
   });
   // Cool, now if I do idToNode["2"].name I've got the name of the node with id 2
 
-  //THIS LINE OF CODE FOR THE OFFSETS IS WHAT IS CREATING THE PROBLEM!!!! 
-  const linkOffset = 10;
+  //THIS LINE OF CODE FOR THE OFFSETS IS WHAT IS CREATING THE PROBLEM!!!!
+  const linkOffset = 20;
   // Add the links
   var links = svg
     .selectAll('mylinks')
@@ -76,24 +80,17 @@ d3.json("./data.json", function( data) {
     .append('path')
     .attr('d', function (d) {
       start = x(idToNode[d.source].name)    // X position of start node on the X axis
-      end = x(idToNode[d.target].name)      // X position of end node
-      return ['M', start, height-30,    // the arc starts at the coordinate x=start, y=height-30 (where the starting node is)
-        'A',                            // This means we're gonna build an elliptical arc
-        (start - end)/2, ',',    // Next 2 lines are the coordinates of the inflexion point. Height of this point is proportional with start - end distance
-        (start - end)/2, 0, 0, ',',
-        start < end ? 1 : 0, end, ',', height-30 + linkOffset * d.link_count] // We always want the arc on top. So if end is before start, putting 0 here turn the arc upside down.
-        .join(' ');
+      end = x(idToNode[d.target].name)
+      if(start > end) {
+        [start, end] = [end, start]
+      }
 
-       //TRYING TO ADD ANIMATION FOR THE LINES. THIS DOESN'T WORK FOR SOME OBVIOUS REASONS
-        update();
-
-function update() {
-      links.transition()
-      .ease(d3.easeLinear)
-      .duration(2000)
-    }
-    //END NON WORKING AREA
-  })
+      off = linkOffset * d.link_count
+      return `M ${start} ${height-30} A
+              ${(start - end - off)/2}, ${(start - end - off)/2}
+              0 0,1
+              ${end}, ${height - 30}`;
+    })
     .style("fill", "none")
     .attr("stroke", (d)=>d.color)
 
@@ -127,13 +124,13 @@ svg
     .attr("y", 10)
     .html("Hover nodes")
 
-    
-    
-// creates legend 
-svg.append("circle").attr("cx",230).attr("cy", 650).attr("r", 6).style("fill", "red")
-svg.append("circle").attr("cx",530).attr("cy", 650).attr("r", 6).style("fill", "green")
-svg.append("circle").attr("cx",730).attr("cy", 650).attr("r", 6).style("fill", "purple")
-svg.append("text").attr("x", 250).attr("y", 650).text("Discussion Question").style("font-size", "15px").attr("alignment-baseline","middle")
-svg.append("text").attr("x", 550).attr("y", 650).text("Quote").style("font-size", "15px").attr("alignment-baseline","middle")
-svg.append("text").attr("x", 750).attr("y", 650).text("Talking Point").style("font-size", "15px").attr("alignment-baseline","middle")
+
+
+// creates legend
+svg.append("circle").attr("cx",230).attr("cy", 10).attr("r", 6).style("fill", "red")
+svg.append("circle").attr("cx",530).attr("cy", 10).attr("r", 6).style("fill", "green")
+svg.append("circle").attr("cx",730).attr("cy", 10).attr("r", 6).style("fill", "purple")
+svg.append("text").attr("x", 250).attr("y", 10).text("Discussion Question").style("font-size", "15px").attr("alignment-baseline","middle")
+svg.append("text").attr("x", 550).attr("y", 10).text("Quote").style("font-size", "15px").attr("alignment-baseline","middle")
+svg.append("text").attr("x", 750).attr("y", 10).text("Talking Point").style("font-size", "15px").attr("alignment-baseline","middle")
 </script>
