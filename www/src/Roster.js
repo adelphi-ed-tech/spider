@@ -24,10 +24,10 @@ function RosterList(props) {
 
 }
 
-function Roster()  {
+function Roster() {
   return {
     id: null,
-    roster: "new roster",
+    roster: "",
     participants: ""
   }
 }
@@ -50,17 +50,12 @@ function RosterForm(props) {
   useEffect(loadDB, [false]);
   useEffect(loadRoster, [db]);
 
-
-
   const handleChange = (e)=> {
-    let key = e.target.name || e.target.id;
-    let val = e.target.value;
-    console.log(roster);
-    roster[key] = val;
-    console.log(roster);
-    setRoster(roster);
+    const key = e.target.name || e.target.id;
+    const val = e.target.value;
+    const updatedRoster = { ...roster, [key]: val };
+    setRoster(updatedRoster);
   }
-
 
   const handleSubmit = (e)=> {
     e.preventDefault();
@@ -71,17 +66,15 @@ function RosterForm(props) {
     return <p>Loading...</p>
   }
 
-  console.log(roster["roster"]);
-
   return (
     <div className="Roster">
       <h1>Roster Form</h1>
-      {JSON.stringify(roster)}
       <form className="RosterForm" onSubmit={handleSubmit}>
           <div className="mb-3">
             <label htmlFor="roster" className="form-label">Name of Roster</label>
             <input id="roster"
                    type="text"
+                   placeholder="roster name"
                    className="form-control"
                    value={roster.roster}
                    onChange={handleChange} />
